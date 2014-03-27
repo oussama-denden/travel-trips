@@ -22,16 +22,39 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tritux.domain.TravelTrip;
 import com.tritux.service.TravelTripService;
 
+/**
+ * Web controller responsible of intercepting incoming requests and sending back
+ * responses.
+ * 
+ * @author Denden-OUSSAMA
+ * 
+ */
 @Controller
 public class WebFormController {
 
+	/**
+	 * Travel Trip service responsible for business operations.
+	 */
 	private TravelTripService travelTripService;
 
+	/**
+	 * constructor injection of the travel service.
+	 * 
+	 * @param travelTripService
+	 *            trip travel service to be injected.
+	 */
 	@Autowired
 	public WebFormController(TravelTripService travelTripService) {
 		this.travelTripService = travelTripService;
 	}
 
+	/**
+	 * fetch all travels trips and show them.
+	 * 
+	 * @param model
+	 *            model.
+	 * @return page name.
+	 */
 	@RequestMapping(value = "/myTravels", method = RequestMethod.GET)
 	public String displaySortedTravelTrips(Model model) {
 		model.addAttribute("travelTripList", travelTripService.findAll());
@@ -60,12 +83,31 @@ public class WebFormController {
 				headers, HttpStatus.OK);
 	}
 
+	/**
+	 * show a form to add a new trip.
+	 * 
+	 * @param model
+	 *            model.
+	 * @return the add travel trip page.
+	 */
 	@RequestMapping(value = "/addTravelTripForm", method = RequestMethod.GET)
 	public String addTravelTripForm(Model model) {
 		model.addAttribute("newTravelTrip", new TravelTrip());
 		return "addTravelTrip";
 	}
 
+	/**
+	 * add a new travel trip.
+	 * 
+	 * @param newTravelTrip
+	 *            travel trip retreived from the request.
+	 * @param result
+	 *            result.
+	 * @param model
+	 *            model.
+	 * @return forward to the home page if every thing is ok else redirect to
+	 *         the same page.
+	 */
 	@RequestMapping(value = "/addTravelTrip", method = RequestMethod.POST)
 	public String registerNewTravelTrip(
 			@Valid @ModelAttribute("newTravelTrip") TravelTrip newTravelTrip,
@@ -81,6 +123,15 @@ public class WebFormController {
 		}
 	}
 
+	/**
+	 * delete a travel trip.
+	 * 
+	 * @param tripID
+	 *            the id of the travel trip to be deleted.
+	 * @param model
+	 *            model.
+	 * @return redirect to the home page.
+	 */
 	@RequestMapping(value = "/{tripID}/deleteTravelTrip", method = RequestMethod.GET)
 	public String deleteTravelTrip(@PathVariable("tripID") String tripID,
 			Model model) {
@@ -90,6 +141,15 @@ public class WebFormController {
 		return "redirect:/";
 	}
 
+	/**
+	 * edit a travel trip.
+	 * 
+	 * @param tripID
+	 *            id of the trip to be deleted.
+	 * @param model
+	 *            model.
+	 * @return if trip doesn't exist return to index else open edit interface.
+	 */
 	@RequestMapping(value = "/{tripID}/editTravelTripForm", method = RequestMethod.GET)
 	public String ediTravelTripForm(@PathVariable("tripID") String tripID,
 			Model model) {
@@ -106,6 +166,21 @@ public class WebFormController {
 		return "/editTravelTrip";
 	}
 
+	/**
+	 * 
+	 * update the travel trip.
+	 * 
+	 * @param tripID
+	 *            the id of the travel trip to be updated.
+	 * @param editTravelTrip
+	 *            contain the value that will be used to update the travel trip.
+	 * @param result
+	 *            result.
+	 * @param model
+	 *            model.
+	 * @return in case of error return stay in the same page. else return to
+	 *         home page.
+	 */
 	@RequestMapping(value = "/{tripID}/editTravelTrip", method = RequestMethod.POST)
 	public String ediTravelTrip(@PathVariable("tripID") String tripID,
 			@Valid @ModelAttribute("editTravelTrip") TravelTrip editTravelTrip,
@@ -124,6 +199,15 @@ public class WebFormController {
 		}
 	}
 
+	/**
+	 * check the detail of a travel trip.
+	 * 
+	 * @param tripID
+	 *            the id of trip.
+	 * @param model
+	 *            model.
+	 * @return open the trip detail page.
+	 */
 	@RequestMapping(value = "/{tripID}/detailsTravelTrip", method = RequestMethod.GET)
 	public String detailsTravelTrip(@PathVariable("tripID") String tripID,
 			Model model) {
